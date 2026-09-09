@@ -6,7 +6,7 @@
 
 const USER_POOL_ID = "us-east-1_tv98rWsWs";
 
-const CLIENT_ID = "76jg1d0ashrem9mbvijd49t7ik";
+const CLIENT_ID = "6kerqfqajof1ftf44ujnvs3bdu";
 
 const API_URL = "YOUR_API_GATEWAY_URL_HERE";
 
