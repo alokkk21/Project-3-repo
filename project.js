@@ -4,9 +4,9 @@
 
 // 🔴 CHANGE THESE 3 VALUES
 
-const USER_POOL_ID = "us-east-1_OEJf49q65";
+const USER_POOL_ID = "us-east-1_tv98rWsWs";
 
-const CLIENT_ID = "1psan3rm0f9k4hnjqjbq0lt7ja";
+const CLIENT_ID = "6kerqfqajof1ftf44ujnvs3bdu";
 
 const API_URL = "YOUR_API_GATEWAY_URL_HERE";
 
