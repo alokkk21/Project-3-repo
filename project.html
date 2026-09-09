@@ -1,63 +1,118 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>CloudOps Incident Management</title>
+```
+<title>CloudOps Incident Management</title>
 
-    <link rel="stylesheet" href="project.css">
+<link rel="stylesheet" href="project.css">
+```
+
 </head>
 
 <body>
 
-    <!-- LOGIN -->
+```
+<!-- ============================================
+     LOGIN PAGE
+============================================= -->
 
-    <div id="loginPage" class="auth-container">
+<div id="loginPage" class="auth-container">
 
-        <div class="auth-card">
+    <div class="auth-card">
 
-            <h1>☁️ CloudOps</h1>
+        <h1>☁️ CloudOps</h1>
 
-            <p class="subtitle">
-                Incident Management Platform
-            </p>
+        <p class="subtitle">
+            Incident Management Platform
+        </p>
 
-            <input
-                type="email"
-                id="loginEmail"
-                placeholder="Email"
-            >
+        <input
+            type="email"
+            id="loginEmail"
+            placeholder="Email"
+            autocomplete="email"
+        >
 
-            <input
-                type="password"
-                id="loginPassword"
-                placeholder="Password"
-            >
+        <input
+            type="password"
+            id="loginPassword"
+            placeholder="Password"
+            autocomplete="current-password"
+        >
 
-            <button onclick="login()">
-                Login
-            </button>
+        <button type="button" onclick="login()">
+            Login
+        </button>
 
-            <p id="loginMessage"></p>
+        <p id="loginMessage"></p>
 
-            <p class="switch">
-                Don't have an account?
-                <span onclick="showSignup()">Create account</span>
-            </p>
-
-        </div>
+        <p class="switch">
+            Don't have an account?
+            <span onclick="showSignup()">
+                Create account
+            </span>
+        </p>
 
     </div>
-<!-- SIGNUP -->
-<div id="signupPage" class="auth-container hidden">
 
-    ...
-    
 </div>
 
 
-<!-- EMAIL VERIFICATION -->
+<!-- ============================================
+     SIGNUP PAGE
+============================================= -->
+
+<div id="signupPage" class="auth-container hidden">
+
+    <div class="auth-card">
+
+        <h1>☁️ CloudOps</h1>
+
+        <p class="subtitle">
+            Create your account
+        </p>
+
+        <input
+            type="email"
+            id="signupEmail"
+            placeholder="Email"
+            autocomplete="email"
+        >
+
+        <input
+            type="password"
+            id="signupPassword"
+            placeholder="Password"
+            autocomplete="new-password"
+        >
+
+        <button type="button" onclick="signup()">
+            Sign Up
+        </button>
+
+        <p id="signupMessage"></p>
+
+        <p class="switch">
+            Already have an account?
+            <span onclick="showLogin()">
+                Login
+            </span>
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- ============================================
+     EMAIL VERIFICATION PAGE
+============================================= -->
+
 <div id="confirmPage" class="auth-container hidden">
 
     <div class="auth-card">
@@ -76,9 +131,10 @@
             type="text"
             id="confirmationCode"
             placeholder="Verification code"
+            autocomplete="one-time-code"
         >
 
-        <button onclick="confirmSignup()">
+        <button type="button" onclick="confirmSignup()">
             Verify Email
         </button>
 
@@ -86,7 +142,9 @@
 
         <p class="switch">
             Back to
-            <span onclick="showLogin()">Login</span>
+            <span onclick="showLogin()">
+                Login
+            </span>
         </p>
 
     </div>
@@ -94,260 +152,263 @@
 </div>
 
 
-<!-- DASHBOARD -->
+<!-- ============================================
+     DASHBOARD
+============================================= -->
+
 <div id="dashboard" class="hidden">
 
-    ...
-    
-</div>
+    <header>
 
-
-    <!-- SIGNUP -->
-
-    <div id="signupPage" class="auth-container hidden">
-
-        <div class="auth-card">
+        <div>
 
             <h1>☁️ CloudOps</h1>
 
-            <p class="subtitle">
-                Create your account
-            </p>
-
-            <input
-                type="email"
-                id="signupEmail"
-                placeholder="Email"
-            >
-
-            <input
-                type="password"
-                id="signupPassword"
-                placeholder="Password"
-            >
-
-            <button onclick="signup()">
-                Sign Up
-            </button>
-
-            <p id="signupMessage"></p>
-
-            <p class="switch">
-                Already have an account?
-                <span onclick="showLogin()">Login</span>
+            <p>
+                Incident Management Platform
             </p>
 
         </div>
 
-    </div>
+        <button
+            type="button"
+            class="logout"
+            onclick="logout()"
+        >
+            Logout
+        </button>
+
+    </header>
 
 
-    <!-- DASHBOARD -->
+    <main>
 
-    <div id="dashboard" class="hidden">
+        <!-- ====================================
+             STATISTICS
+        ===================================== -->
 
-        <header>
+        <section class="stats">
 
-            <div>
-                <h1>☁️ CloudOps</h1>
+            <div class="stat-card">
 
-                <p>
-                    Incident Management Platform
+                <h3>
+                    Total Incidents
+                </h3>
+
+                <p id="totalIncidents">
+                    0
                 </p>
+
             </div>
 
+
+            <div class="stat-card critical">
+
+                <h3>
+                    Critical
+                </h3>
+
+                <p id="criticalIncidents">
+                    0
+                </p>
+
+            </div>
+
+
+            <div class="stat-card warning">
+
+                <h3>
+                    Open
+                </h3>
+
+                <p id="openIncidents">
+                    0
+                </p>
+
+            </div>
+
+
+            <div class="stat-card success">
+
+                <h3>
+                    Resolved
+                </h3>
+
+                <p id="resolvedIncidents">
+                    0
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- ====================================
+             CREATE INCIDENT
+        ===================================== -->
+
+        <section class="panel">
+
+            <div class="panel-header">
+
+                <h2>
+                    Create Incident
+                </h2>
+
+            </div>
+
+
+            <div class="form-grid">
+
+                <input
+                    type="text"
+                    id="incidentTitle"
+                    placeholder="Incident title"
+                >
+
+
+                <select id="incidentSeverity">
+
+                    <option value="Low">
+                        Low
+                    </option>
+
+                    <option value="Medium">
+                        Medium
+                    </option>
+
+                    <option value="High">
+                        High
+                    </option>
+
+                    <option value="Critical">
+                        Critical
+                    </option>
+
+                </select>
+
+
+                <input
+                    type="text"
+                    id="incidentService"
+                    placeholder="Affected service e.g. Lambda"
+                >
+
+            </div>
+
+
+            <textarea
+                id="incidentDescription"
+                placeholder="Describe the incident..."
+            ></textarea>
+
+
             <button
-                class="logout"
-                onclick="logout()">
-                Logout
+                type="button"
+                class="create-btn"
+                onclick="createIncident()"
+            >
+                + Create Incident
             </button>
 
-        </header>
+
+            <p id="incidentMessage"></p>
+
+        </section>
 
 
-        <main>
+        <!-- ====================================
+             INCIDENT TABLE
+        ===================================== -->
 
-            <!-- STATISTICS -->
+        <section class="panel">
 
-            <section class="stats">
+            <div class="panel-header">
 
-                <div class="stat-card">
-
-                    <h3>Total Incidents</h3>
-
-                    <p id="totalIncidents">
-                        0
-                    </p>
-
-                </div>
-
-
-                <div class="stat-card critical">
-
-                    <h3>Critical</h3>
-
-                    <p id="criticalIncidents">
-                        0
-                    </p>
-
-                </div>
-
-
-                <div class="stat-card warning">
-
-                    <h3>Open</h3>
-
-                    <p id="openIncidents">
-                        0
-                    </p>
-
-                </div>
-
-
-                <div class="stat-card success">
-
-                    <h3>Resolved</h3>
-
-                    <p id="resolvedIncidents">
-                        0
-                    </p>
-
-                </div>
-
-            </section>
-
-
-            <!-- CREATE INCIDENT -->
-
-            <section class="panel">
-
-                <div class="panel-header">
-
-                    <h2>Create Incident</h2>
-
-                </div>
-
-
-                <div class="form-grid">
-
-                    <input
-                        type="text"
-                        id="incidentTitle"
-                        placeholder="Incident title"
-                    >
-
-
-                    <select id="incidentSeverity">
-
-                        <option value="Low">
-                            Low
-                        </option>
-
-                        <option value="Medium">
-                            Medium
-                        </option>
-
-                        <option value="High">
-                            High
-                        </option>
-
-                        <option value="Critical">
-                            Critical
-                        </option>
-
-                    </select>
-
-
-                    <input
-                        type="text"
-                        id="incidentService"
-                        placeholder="Affected service e.g. Lambda"
-                    >
-
-                </div>
-
-
-                <textarea
-                    id="incidentDescription"
-                    placeholder="Describe the incident..."
-                ></textarea>
-
+                <h2>
+                    Recent Incidents
+                </h2>
 
                 <button
-                    class="create-btn"
-                    onclick="createIncident()">
-
-                    + Create Incident
-
+                    type="button"
+                    onclick="loadIncidents()"
+                >
+                    Refresh
                 </button>
 
-                <p id="incidentMessage"></p>
-
-            </section>
+            </div>
 
 
-            <!-- INCIDENT TABLE -->
+            <div class="table-container">
 
-            <section class="panel">
+                <table>
 
-                <div class="panel-header">
+                    <thead>
 
-                    <h2>Recent Incidents</h2>
+                        <tr>
 
-                    <button
-                        onclick="loadIncidents()">
+                            <th>
+                                ID
+                            </th>
 
-                        Refresh
+                            <th>
+                                Incident
+                            </th>
 
-                    </button>
+                            <th>
+                                Service
+                            </th>
 
-                </div>
+                            <th>
+                                Severity
+                            </th>
 
+                            <th>
+                                Status
+                            </th>
 
-                <div class="table-container">
+                            <th>
+                                Created
+                            </th>
 
-                    <table>
+                            <th>
+                                Action
+                            </th>
 
-                        <thead>
+                        </tr>
 
-                            <tr>
-
-                                <th>ID</th>
-
-                                <th>Incident</th>
-
-                                <th>Service</th>
-
-                                <th>Severity</th>
-
-                                <th>Status</th>
-
-                                <th>Created</th>
-
-                                <th>Action</th>
-
-                            </tr>
-
-                        </thead>
+                    </thead>
 
 
-                        <tbody id="incidentTable">
+                    <tbody id="incidentTable">
 
-                        </tbody>
+                    </tbody>
 
-                    </table>
+                </table>
 
-                </div>
+            </div>
 
-            </section>
+        </section>
 
-        </main>
+    </main>
 
-    </div>
-   
+</div>
+
+
+<!-- ============================================
+     COGNITO SDK
+============================================= -->
+
 <script src="https://cdn.jsdelivr.net/npm/amazon-cognito-identity-js@6.3.12/dist/amazon-cognito-identity.min.js"></script>
+
+
+<!-- ============================================
+     YOUR JAVASCRIPT
+============================================= -->
+
 <script src="project.js"></script>
-    <script src="project.js"></script>
+```
 
 </body>
+
 </html>
