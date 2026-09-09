@@ -16,7 +16,7 @@ const CLIENT_ID = "76jg1d0ashrem9mbvijd49t7ik";
 // https://abcxyz123.execute-api.us-east-1.amazonaws.com/student
 //
 const API_URL =
-    "https://z5bd2rykwi.execute-api.us-east-1.amazonaws.com/student";
+    "https://z5bd2rykwi.execute-api.us-east-1.amazonaws.com/students";
 
 
 // ============================================
