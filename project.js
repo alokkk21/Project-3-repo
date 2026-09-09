@@ -2,13 +2,21 @@
 // CLOUDOPS - COGNITO CONFIGURATION
 // ============================================
 
-// 🔴 CHANGE THESE 3 VALUES
-
+// Cognito User Pool ID
 const USER_POOL_ID = "us-east-1_tv98rWsWs";
 
+// Cognito App Client ID
 const CLIENT_ID = "76jg1d0ashrem9mbvijd49t7ik";
 
-const API_URL = "https://abc123.execute-api.us-east-1.amazonaws.com/";
+// IMPORTANT:
+// Replace YOUR-REAL-API-ID with your actual
+// API Gateway Invoke URL.
+//
+// Example:
+// https://abcxyz123.execute-api.us-east-1.amazonaws.com/student
+//
+const API_URL =
+    "https://YOUR-REAL-API-ID.execute-api.us-east-1.amazonaws.com/student";
 
 
 // ============================================
@@ -147,6 +155,7 @@ function signup() {
 
         function(error, result) {
 
+
             // Signup failed
 
             if (error) {
@@ -167,8 +176,7 @@ function signup() {
             // Signup successful
 
             console.log(
-                "Signup successful:",
-                result
+                "Signup successful"
             );
 
 
@@ -264,6 +272,7 @@ function confirmSignup() {
 
         function(error, result) {
 
+
             // Verification failed
 
             if (error) {
@@ -284,8 +293,7 @@ function confirmSignup() {
             // Verification successful
 
             console.log(
-                "Email verification successful:",
-                result
+                "Email verification successful"
             );
 
 
@@ -383,6 +391,7 @@ function login() {
 
         {
 
+
             // =================================
             // LOGIN SUCCESS
             // =================================
@@ -411,14 +420,7 @@ function login() {
 
 
                 console.log(
-                    "Access Token:",
-                    accessToken
-                );
-
-
-                console.log(
-                    "ID Token:",
-                    idToken
+                    "Cognito login successful."
                 );
 
 
@@ -428,7 +430,6 @@ function login() {
                     "accessToken",
                     accessToken
                 );
-
 
                 localStorage.setItem(
                     "idToken",
@@ -556,7 +557,6 @@ function checkLogin() {
         showLogin();
 
         return;
-
     }
 
 
@@ -565,6 +565,7 @@ function checkLogin() {
     currentUser.getSession(
 
         function(error, session) {
+
 
             // Session error
 
@@ -578,7 +579,6 @@ function checkLogin() {
                 showLogin();
 
                 return;
-
             }
 
 
@@ -641,6 +641,7 @@ function checkLogin() {
 
 // ============================================
 // LOAD INCIDENTS
+// GET /student
 // ============================================
 
 async function loadIncidents() {
@@ -662,8 +663,12 @@ async function loadIncidents() {
             showLogin();
 
             return;
-
         }
+
+
+        console.log(
+            "Loading incidents..."
+        );
 
 
         // API request
@@ -692,25 +697,58 @@ async function loadIncidents() {
             );
 
 
-        // API error
+        // Get response text first
 
-        if (!response.ok) {
+        const responseText =
+            await response.text();
+
+
+        let data = {};
+
+        try {
+
+            data =
+                responseText
+                    ? JSON.parse(responseText)
+                    : {};
+
+        }
+
+        catch (parseError) {
+
+            console.error(
+                "JSON Parse Error:",
+                parseError
+            );
 
             throw new Error(
-                "API request failed"
+                "Invalid API response."
             );
 
         }
 
 
-        // Convert response to JSON
+        // API error
 
-        const data =
-            await response.json();
+        if (!response.ok) {
+
+            console.error(
+                "GET API Error:",
+                data
+            );
+
+            throw new Error(
+
+                data.message ||
+                `API request failed: ${response.status}`
+
+            );
+
+        }
 
 
         console.log(
-            "API Response:",
+            "GET API Response:",
             data
         );
 
@@ -721,6 +759,7 @@ async function loadIncidents() {
 
     }
 
+
     catch (error) {
 
         console.error(
@@ -729,12 +768,18 @@ async function loadIncidents() {
         );
 
 
-        document
-            .getElementById(
+        const message =
+            document.getElementById(
                 "incidentMessage"
-            )
-            .innerText =
-            "Unable to load incidents.";
+            );
+
+
+        if (message) {
+
+            message.innerText =
+                "Unable to load incidents.";
+
+        }
 
     }
 
@@ -753,10 +798,20 @@ function displayIncidents(data) {
         );
 
 
+    if (!table) {
+
+        console.error(
+            "incidentTable element not found."
+        );
+
+        return;
+    }
+
+
     table.innerHTML = "";
 
 
-    // Handle different API response formats
+    // Handle API response
 
     const incidents =
         Array.isArray(data)
@@ -769,6 +824,27 @@ function displayIncidents(data) {
     let open = 0;
 
     let resolved = 0;
+
+
+    // No incidents
+
+    if (incidents.length === 0) {
+
+        table.innerHTML = `
+
+            <tr>
+
+                <td colspan="7">
+
+                    No incidents found.
+
+                </td>
+
+            </tr>
+
+        `;
+
+    }
 
 
     // Loop through incidents
@@ -822,27 +898,50 @@ function displayIncidents(data) {
                 );
 
 
+            // Create safe values
+
+            const incidentId =
+                incident.incidentId ||
+                incident["Student-id"] ||
+                "-";
+
+            const title =
+                incident.title || "-";
+
+            const service =
+                incident.service || "-";
+
+            const severity =
+                incident.severity || "-";
+
+            const status =
+                incident.status || "Open";
+
+            const createdAt =
+                incident.createdAt || "-";
+
+
             row.innerHTML = `
 
                 <td>
-                    ${incident.incidentId || "-"}
+                    ${incidentId}
                 </td>
 
                 <td>
-                    ${incident.title || "-"}
+                    ${title}
                 </td>
 
                 <td>
-                    ${incident.service || "-"}
+                    ${service}
                 </td>
 
                 <td>
 
                     <span class="badge ${getSeverityClass(
-                        incident.severity
+                        severity
                     )}">
 
-                        ${incident.severity || "-"}
+                        ${severity}
 
                     </span>
 
@@ -852,36 +951,25 @@ function displayIncidents(data) {
 
                     <span class="status">
 
-                        ${incident.status || "Open"}
+                        ${status}
 
                     </span>
 
                 </td>
 
                 <td>
-                    ${incident.createdAt || "-"}
+                    ${createdAt}
                 </td>
 
                 <td>
 
-                    ${
-                        incident.status !==
-                        "Resolved"
+                    <button
+                        class="delete-btn"
+                        onclick="deleteIncident('${incidentId}')">
 
-                        ?
+                        Delete
 
-                        `<button
-                            class="resolve-btn"
-                            onclick="resolveIncident('${incident.incidentId}')">
-
-                            Resolve
-
-                        </button>`
-
-                        :
-
-                        "✓ Resolved"
-                    }
+                    </button>
 
                 </td>
 
@@ -897,28 +985,56 @@ function displayIncidents(data) {
 
     // Update statistics
 
-    document.getElementById(
-        "totalIncidents"
-    ).innerText =
-        incidents.length;
+    const totalElement =
+        document.getElementById(
+            "totalIncidents"
+        );
+
+    if (totalElement) {
+
+        totalElement.innerText =
+            incidents.length;
+
+    }
 
 
-    document.getElementById(
-        "criticalIncidents"
-    ).innerText =
-        critical;
+    const criticalElement =
+        document.getElementById(
+            "criticalIncidents"
+        );
+
+    if (criticalElement) {
+
+        criticalElement.innerText =
+            critical;
+
+    }
 
 
-    document.getElementById(
-        "openIncidents"
-    ).innerText =
-        open;
+    const openElement =
+        document.getElementById(
+            "openIncidents"
+        );
+
+    if (openElement) {
+
+        openElement.innerText =
+            open;
+
+    }
 
 
-    document.getElementById(
-        "resolvedIncidents"
-    ).innerText =
-        resolved;
+    const resolvedElement =
+        document.getElementById(
+            "resolvedIncidents"
+        );
+
+    if (resolvedElement) {
+
+        resolvedElement.innerText =
+            resolved;
+
+    }
 
 }
 
@@ -959,6 +1075,7 @@ function getSeverityClass(
 
 // ============================================
 // CREATE INCIDENT
+// POST /student
 // ============================================
 
 async function createIncident() {
@@ -1062,7 +1179,11 @@ async function createIncident() {
 
     try {
 
-        // Send to API Gateway
+        message.innerText =
+            "Creating incident...";
+
+
+        // POST request
 
         const response =
             await fetch(
@@ -1093,24 +1214,58 @@ async function createIncident() {
             );
 
 
-        // Convert response
+        const responseText =
+            await response.text();
 
-        const result =
-            await response.json();
+
+        let result = {};
+
+        try {
+
+            result =
+                responseText
+                    ? JSON.parse(responseText)
+                    : {};
+
+        }
+
+        catch (parseError) {
+
+            console.error(
+                "POST JSON Parse Error:",
+                parseError
+            );
+
+            throw new Error(
+                "Invalid API response."
+            );
+
+        }
 
 
         // API error
 
         if (!response.ok) {
 
+            console.error(
+                "POST API Error:",
+                result
+            );
+
             throw new Error(
 
                 result.message ||
-                "Failed to create incident"
+                `Failed to create incident: ${response.status}`
 
             );
 
         }
+
+
+        console.log(
+            "Incident created:",
+            result
+        );
 
 
         // Success
@@ -1138,9 +1293,10 @@ async function createIncident() {
 
         // Reload incidents
 
-        loadIncidents();
+        await loadIncidents();
 
     }
+
 
     catch (error) {
 
@@ -1151,6 +1307,7 @@ async function createIncident() {
 
 
         message.innerText =
+            error.message ||
             "Failed to create incident.";
 
     }
@@ -1159,12 +1316,28 @@ async function createIncident() {
 
 
 // ============================================
-// RESOLVE INCIDENT
+// DELETE INCIDENT
+// DELETE /student
 // ============================================
 
-async function resolveIncident(
+async function deleteIncident(
     incidentId
 ) {
+
+    // Confirm deletion
+
+    const confirmed =
+        confirm(
+            `Are you sure you want to delete incident ${incidentId}?`
+        );
+
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
 
     // Get JWT
 
@@ -1185,16 +1358,22 @@ async function resolveIncident(
 
     try {
 
-        // Send PUT request
+        console.log(
+            "Deleting incident:",
+            incidentId
+        );
+
+
+        // DELETE request
 
         const response =
             await fetch(
 
-                `${API_URL}/${incidentId}`,
+                API_URL,
 
                 {
 
-                    method: "PUT",
+                    method: "DELETE",
 
                     headers: {
 
@@ -1209,8 +1388,8 @@ async function resolveIncident(
                     body:
                         JSON.stringify({
 
-                            status:
-                                "Resolved"
+                            incidentId:
+                                incidentId
 
                         })
 
@@ -1219,33 +1398,92 @@ async function resolveIncident(
             );
 
 
-        // Check response
+        const responseText =
+            await response.text();
 
-        if (!response.ok) {
+
+        let result = {};
+
+        try {
+
+            result =
+                responseText
+                    ? JSON.parse(responseText)
+                    : {};
+
+        }
+
+        catch (parseError) {
+
+            console.error(
+                "DELETE JSON Parse Error:",
+                parseError
+            );
 
             throw new Error(
-                "Failed to resolve incident"
+                "Invalid API response."
             );
 
         }
 
 
+        // API error
+
+        if (!response.ok) {
+
+            console.error(
+                "DELETE API Error:",
+                result
+            );
+
+            throw new Error(
+
+                result.message ||
+                `Failed to delete incident: ${response.status}`
+
+            );
+
+        }
+
+
+        console.log(
+            "Incident deleted:",
+            result
+        );
+
+
         // Reload incidents
 
-        loadIncidents();
+        await loadIncidents();
+
+
+        const message =
+            document.getElementById(
+                "incidentMessage"
+            );
+
+
+        if (message) {
+
+            message.innerText =
+                "Incident deleted successfully.";
+
+        }
 
     }
+
 
     catch (error) {
 
         console.error(
-            "Resolve Incident Error:",
+            "Delete Incident Error:",
             error
         );
 
 
         alert(
-            "Unable to resolve incident."
+            error.message ||
+            "Unable to delete incident."
         );
 
     }
