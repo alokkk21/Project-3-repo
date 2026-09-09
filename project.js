@@ -8,7 +8,7 @@ const USER_POOL_ID = "us-east-1_tv98rWsWs";
 
 const CLIENT_ID = "76jg1d0ashrem9mbvijd49t7ik";
 
-const API_URL = "YOUR_API_GATEWAY_URL_HERE";
+const API_URL = "https://abc123.execute-api.us-east-1.amazonaws.com/Student";
 
 
 // ============================================
